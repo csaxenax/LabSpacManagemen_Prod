@@ -1,0 +1,95 @@
+ERROR 2023-08-01 14:29:53,042 views get 1995 
+ERROR 2023-08-01 16:57:14,133 views get 2001 unhashable type: 'slice'
+ERROR 2023-08-01 17:04:07,313 views get 2001 string indices must be integers
+ERROR 2023-08-01 17:41:36,172 views get 2004 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:43:56,137 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:44:01,601 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:44:04,622 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:44:33,769 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:44:43,124 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 17:44:45,894 views get 2005 QuerySet indices must be integers or slices, not str.
+ERROR 2023-08-01 22:45:19,937 views get 2006 list index out of range
+ERROR 2023-08-01 22:47:37,137 views get 2006 string indices must be integers
+ERROR 2023-08-02 10:51:29,811 views get 2012 list indices must be integers or slices, not dict
+ERROR 2023-08-02 11:22:24,957 views get 2014 list indices must be integers or slices, not str
+ERROR 2023-08-02 11:49:02,690 views get 2017 list indices must be integers or slices, not str
+ERROR 2023-08-02 11:49:27,856 views get 2017 list indices must be integers or slices, not str
+ERROR 2023-08-02 11:50:14,957 views get 2017 list indices must be integers or slices, not str
+ERROR 2023-08-02 11:50:29,886 views get 2017 list indices must be integers or slices, not str
+ERROR 2023-08-02 12:57:38,504 views get 2020 'dict' object has no attribute 'append'
+ERROR 2023-08-02 15:18:17,792 views get 2013 __init__() got multiple values for argument 'status'
+ERROR 2023-08-02 15:27:51,070 views get 2013 __init__() got multiple values for argument 'status'
+ERROR 2023-08-02 16:01:31,314 views get 2031 'value'
+ERROR 2023-08-02 23:02:37,261 views get 2036 unsupported operand type(s) for +: 'int' and 'str'
+ERROR 2023-08-02 23:04:18,833 views get 2036 unsupported operand type(s) for +: 'int' and 'str'
+ERROR 2023-08-03 11:08:07,762 views get 2302 'value'
+ERROR 2023-08-03 11:11:01,018 views get 2302 'value'
+ERROR 2023-08-03 11:13:38,909 views get 2303 'value'
+ERROR 2023-08-03 11:14:19,162 views get 2303 'value'
+ERROR 2023-08-03 11:16:30,012 views get 2305 'value'
+ERROR 2023-08-03 11:17:57,850 views get 2307 'categroy'
+ERROR 2023-08-03 11:35:27,165 views get 2035 too many values to unpack (expected 2)
+ERROR 2023-08-03 11:56:29,285 views get 2042 too many values to unpack (expected 2)
+ERROR 2023-08-03 11:57:06,329 views get 2043 too many values to unpack (expected 2)
+ERROR 2023-08-03 12:01:21,311 views get 2044 'list' object has no attribute 'items'
+ERROR 2023-08-03 22:34:54,539 views get 2043 list index out of range
+ERROR 2023-08-03 22:36:28,085 views get 2045 'str' object has no attribute 'copy'
+ERROR 2023-08-03 22:38:43,083 views get 2046 'str' object has no attribute 'copy'
+ERROR 2023-08-03 22:42:05,784 views get 2045 list index out of range
+ERROR 2023-08-03 22:46:35,559 views get 2045 'NoneType' object has no attribute 'split'
+ERROR 2023-08-03 22:46:42,650 views get 2045 'NoneType' object has no attribute 'split'
+ERROR 2023-08-03 22:53:31,800 views get 2048 name 'master_list' is not defined
+ERROR 2023-08-03 22:57:27,255 views get 2050 list index out of range
+ERROR 2023-08-03 23:01:31,368 views get 2050 list index out of range
+ERROR 2023-08-03 23:02:07,291 views get 2051 list index out of range
+ERROR 2023-08-03 23:25:16,711 views get 2315 'value'
+ERROR 2023-08-03 23:27:33,013 views get 2315 'value'
+ERROR 2023-08-04 10:08:54,561 views get 168 list index out of range
+ERROR 2023-08-08 15:26:08,140 views post 1456 UserRequestModel matching query does not exist.
+ERROR 2023-08-08 15:26:25,533 views post 1456 UserRequestModel matching query does not exist.
+ERROR 2023-08-08 15:28:09,203 views post 1457 UserRequestModel matching query does not exist.
+ERROR 2023-08-08 15:28:54,606 views post 1457 UserRequestModel matching query does not exist.
+ERROR 2023-08-08 15:29:31,787 views post 1459 UserRequestModel matching query does not exist.
+ERROR 2023-08-08 16:32:27,136 views post 1460 get() returned more than one UserRequestModel -- it returned 8!
+ERROR 2023-08-08 16:32:57,342 views post 1460 get() returned more than one UserRequestModel -- it returned 8!
+ERROR 2023-08-08 16:33:43,119 views post 1460 get() returned more than one UserRequestModel -- it returned 8!
+ERROR 2023-08-08 16:54:07,015 views post 1486 type object 'UserRequestModel' has no attribute 'DoesNOTExist'
+ERROR 2023-08-08 16:55:19,921 views post 1487 type object 'UserRequestModel' has no attribute 'DoesNOTExist'
+ERROR 2023-08-08 17:04:21,806 views post 1487 type object 'UserRequestModel' has no attribute 'DoesNOTExist'
+ERROR 2023-08-08 17:11:01,292 views post 1461 get() returned more than one UserRequestModel -- it returned 3!
+ERROR 2023-08-08 17:15:23,539 views post 1485 UserModel matching query does not exist.
+ERROR 2023-08-08 17:16:38,606 views post 1485 UserModel matching query does not exist.
+ERROR 2023-08-08 17:17:24,886 views post 1485 UserModel matching query does not exist.
+ERROR 2023-08-08 17:19:59,472 views post 1485 UserModel matching query does not exist.
+ERROR 2023-08-08 17:22:22,520 views post 1485 get() returned more than one UserRequestModel -- it returned 2!
+ERROR 2023-08-08 17:24:36,306 views post 1485 get() returned more than one UserRequestModel -- it returned 2!
+ERROR 2023-08-08 17:36:56,264 views post 1495 get() returned more than one UserRequestModel -- it returned 2!
+ERROR 2023-08-08 17:40:45,090 views post 1480 UserModel matching query does not exist.
+ERROR 2023-08-08 17:41:27,930 views post 1480 UserModel matching query does not exist.
+ERROR 2023-08-08 17:42:37,250 views post 1480 get() returned more than one UserRequestModel -- it returned 2!
+ERROR 2023-08-08 17:44:15,054 views post 1480 get() returned more than one UserRequestModel -- it returned 2!
+ERROR 2023-08-10 10:38:56,974 views post 1468 get() returned more than one UserRequestModel -- it returned 6!
+ERROR 2023-08-10 11:27:49,744 views post 1468 'UserRequestModel' object has no attribute 'filter'
+ERROR 2023-08-10 15:33:51,186 views post 1658 string indices must be integers
+ERROR 2023-08-10 15:34:19,393 views post 1658 string indices must be integers
+ERROR 2023-08-10 15:37:18,923 views post 1658 string indices must be integers
+ERROR 2023-08-10 15:38:07,567 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:38:23,155 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:38:47,606 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:41:18,853 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:41:47,060 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:45:40,879 views post 1654 string indices must be integers
+ERROR 2023-08-10 15:47:02,787 views post 1657 string indices must be integers
+ERROR 2023-08-10 15:48:09,273 views post 1659 string indices must be integers
+ERROR 2023-08-10 15:49:20,063 views post 1660 string indices must be integers
+ERROR 2023-08-10 15:49:47,549 views post 1661 string indices must be integers
+ERROR 2023-09-13 22:55:57,991 views post 546 'list' object has no attribute 'split'
+ERROR 2023-10-09 20:21:28,536 views post 2376 'int' object is not subscriptable
+ERROR 2023-10-09 20:22:29,643 views post 2377 'int' object is not subscriptable
+ERROR 2023-10-09 20:30:44,151 views post 2396 'NoneType' object has no attribute 'get'
+ERROR 2023-10-09 20:31:24,301 views post 2398 'NoneType' object has no attribute 'get'
+ERROR 2023-10-09 20:32:23,180 views post 2398 'NoneType' object has no attribute 'get'
+ERROR 2023-10-09 20:32:56,173 views post 2399 'NoneType' object has no attribute 'get'
+ERROR 2023-10-09 20:38:08,406 views post 2400 string indices must be integers
+ERROR 2023-10-09 20:41:22,151 views post 2400 string indices must be integers
+ERROR 2023-10-09 20:44:34,325 views post 2400 string indices must be integers
