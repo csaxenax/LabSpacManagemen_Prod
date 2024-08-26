@@ -8,3 +8,4 @@ class AllocationappConfig(AppConfig):
     def ready(self):
         from . import schedulers
         schedulers.start_deallocate_schedular()
+        schedulers.start_count_scheduler()

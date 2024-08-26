@@ -1,0 +1,42 @@
+{
+    "CCG": {
+        "team": "CCG",
+        "bench_data_length": 813,
+        "free_report_count": 117,
+        "total": 930,
+        "all_value": 930,
+        "match": true
+    },
+    "PSE": {
+        "team": "PSE",
+        "bench_data_length": 149,
+        "free_report_count": 2,
+        "total": 151,
+        "all_value": 151,
+        "match": true
+    },
+    "SIV": {
+        "team": "SIV",
+        "bench_data_length": 464,
+        "free_report_count": 110,
+        "total": 574,
+        "all_value": 574,
+        "match": true
+    },
+    "CLSS": {
+        "team": "CLSS",
+        "bench_data_length": 144,
+        "free_report_count": 5,
+        "total": 149,
+        "all_value": 149,
+        "match": true
+    },
+    "C4S": {
+        "team": "C4S",
+        "bench_data_length": 56,
+        "free_report_count": 0,
+        "total": 56,
+        "all_value": 56,
+        "match": true
+    }
+}

@@ -11,8 +11,13 @@ urlpatterns = [
     path('TeamDrillDownData/',views.TeamDrillDownView.as_view(),name='teamsdrilldowndata'),
     path('ProgramDrillDownData/',views.ProgramDrillDownView.as_view(),name='programdrilldown'),
     path('ProgramVendorDrillDownData/',views.ProgramVendorView.as_view(),name='programvendordrilldown'),
+    path('UserAllocationList/',views.AllocatedUserList.as_view(),name='teamsdrilldowndata'),
+    path('UserProgramLocationDrillDown/',views.UserBasedLocationDrillDown.as_view(),name='userlocationrilldowndata'),
+    path('UserProgramVendorDrillDown/',views.UserBasedProgramDrillDown.as_view(),name='userprogramdrilldowndata'),
+    path('UserProgramTeamDrillDown/',views.UserBasedTeamDrillDown.as_view(),name='userteamdrilldowndata'),
     path('GetBuildingNames/',views.GetBuildingNamesView.as_view(),name='getbuildingnames'),
     path('GetProgramSkuVendorDropdownNames/',views.GetProgramSkuVendorDropdownNamesView.as_view(),name='getprogramskuvendordropdownnames'),
+    path('FunctionDrillDown/',views.FunctionDrillDownView.as_view(),name='FunctionDrillDown'),
 
     # Allocationpage API's
     path('ListAllLocations/',views.ListAllLocationsView.as_view(),name="locations"),
@@ -23,6 +28,7 @@ urlpatterns = [
     path('GetSkuDetails/',views.GetSKUDetailsView.as_view(),name='skudetails'),
     path('GetVendorDetails/',views.GetVendorDetails.as_view(),name="vendordetails"),
     path('GetTeamNames/',views.GetTeamNamesView.as_view(),name='teams'),
+    path('GetFunctionName/',views.GetFunctionView.as_view(),name='Function'),
 
     # Approve Page
     path('ViewApprovalRequests/',views.ApproveViewPage.as_view(),name='viewapproverequests'),
@@ -44,6 +50,8 @@ urlpatterns = [
     path('EditDeleteSku/',views.EditDeleteSkuView.as_view(),name='editdeletesku'),
     path('DeleteVendor/',views.DeleteVendor.as_view(),name='deletevendor'),
     path('DeleteTeam/',views.DeleteTeam.as_view(),name='deleteteam'),
+    path('AddFunction/',views.AddFunctionView.as_view(),name='programskudata'),
+    path('EditDeleteFunction/',views.EditDeleteFunctionView.as_view(),name='editdeletefunction'),
     
     # userDetails
     path('RoleCheck/', views.RoleCheck.as_view(),name='userDetail'), 

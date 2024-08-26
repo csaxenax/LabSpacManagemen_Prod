@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "labmanager.apps1-fm-int.icloud.intel.com",
     "labspace.apps1-bg-int.icloud.intel.com",
+    "labspaceapiProdBG-Clone.apps1-bg-int.icloud.intel.com",
     "sivindicator.intel.com",
     "127.0.0.1",
     "10.254.0.78",
@@ -142,6 +143,19 @@ DATABASES = {
         }
     }
 }
+
+
+# DATABASES = {
+#     'default':{
+#         'ENGINE':'djongo',
+#         'NAME':'LabManagerProdClone',
+#         'ENFORCE_SCHEMA':False,
+#         'CLIENT':{
+#             'host':'mongodb://LabManagerProdClone_rw:rRlS0XfG212A8C0@p1fm1mon288.amr.corp.intel.com:9051,p2fm1mon288.amr.corp.intel.com:9051,p3fm1mon288.amr.corp.intel.com:9051/LabManagerProdClone?ssl=true&replicaSet=mongo9051'
+#         }
+#     }
+# }
+
 
 # DATABASES = {
 #     'default':{

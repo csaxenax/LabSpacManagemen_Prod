@@ -25,10 +25,20 @@ class BenchAllocationDataModel(models.Model):
     Duration = models.CharField(max_length=10,null=True,blank=True)
     Team = models.CharField(max_length=20,blank=True)
     Remarks = models.CharField(max_length=255,blank=True)
+    Function = models.CharField(max_length=100,blank=True,null=True,default="")
+    Department = models.CharField(max_length=100,blank=True,null=True,default="")
     
     def __str__(self):
         return f"Allocated to {self.Who} from {self.FromWW} to {self.ToWW}"
 
+class RackSelfModel(models.Model):
+    id = models.IntegerField(default=1,primary_key=True)
+    IsAllocated = models.BooleanField(default=False)
+    IsRequested = models.BooleanField(default=False)
+    labelNo = models.CharField(max_length=50,blank=True,null=True)
+    shelfNo = models.CharField(max_length=50,blank=True,null=True)
+    AllocationData = models.ArrayField(model_container=BenchAllocationDataModel,blank=True,null=True)
+    status = models.CharField(max_length=100,blank=True,null=True)
 
 class BenchesModel(models.Model):
     """ Model to store bench details"""
@@ -44,9 +54,11 @@ class BenchesModel(models.Model):
     team = models.CharField(max_length=10,null=True,blank=True)
     AllocationData = models.ArrayField(model_container=BenchAllocationDataModel,blank=True,null=True)
     #AllocatedDate = models.DateTimeField(blank=True,null=True,auto_now=True)
+    RackDetail = models.ArrayField(model_container=RackSelfModel, blank=True, null=True)
     objects = models.DjongoManager()
     def __str__(self):
         return str(self.BenchId)
+    
 
 class BenchesRowModel(models.Model):
     seatRowLabel = models.CharField(primary_key=True,unique=True,max_length=10)
@@ -105,6 +117,8 @@ class AllocationDetailsModel(models.Model):
     # changes
     RequestedBy = models.ArrayField(model_container=AllocatedToModel,blank=True,null=True)
     RequestedDate = models.DateTimeField(auto_now=True,blank=True,null=True)
+    Function = models.CharField(max_length=100,blank=True,null=True,default="")
+    Department = models.CharField(max_length=100,blank=True,null=True,default="")
     def __str__(self):
         return str(self.id)
     
@@ -140,6 +154,14 @@ class TeamsModel(models.Model):
 
     def __str__(self):
         return self.TeamName
+    
+class FunctionModel(models.Model):
+    """ Model for storing Teams data"""
+    TeamName = models.ForeignKey(TeamsModel,on_delete=models.CASCADE,null=True)
+    Function = models.CharField(max_length=255,blank=True,null=True)
+
+    def __str__(self):
+        return self.Function
 
 class UserRolesModel(models.Model):
     """ Model for storing User Roles"""

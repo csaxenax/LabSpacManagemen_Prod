@@ -683,3 +683,13 @@ INFO 2023-10-06 11:22:19,487 functions DeallocationSchedular 36 Scheduler Starte
 INFO 2023-10-06 11:22:30,972 functions DeallocationSchedular 191 Bench Expiry email sent for id 192,                     User ARBAZ ALI for benches ['B8']
 INFO 2023-10-06 11:22:41,520 functions DeallocationSchedular 191 Bench Expiry email sent for id 199,                     User Ajay Myaka for benches ['B11']
 INFO 2023-10-06 11:22:41,522 functions DeallocationSchedular 200 Scheduler Completed Execution
+INFO 2024-06-20 18:24:32,478 functions DeallocationSchedular 36 Scheduler Started
+INFO 2024-06-20 18:24:33,679 functions DeallocationSchedular 36 Scheduler Started
+INFO 2024-06-20 18:24:34,584 functions DeallocationSchedular 267 Scheduler Completed Execution
+INFO 2024-06-20 18:24:35,445 functions DeallocationSchedular 267 Scheduler Completed Execution
+INFO 2024-06-20 19:13:14,027 functions DeallocationSchedular 36 Scheduler Started
+INFO 2024-06-20 19:13:15,182 functions DeallocationSchedular 36 Scheduler Started
+INFO 2024-06-20 19:13:23,367 functions DeallocationSchedular 206 Bench Deallocated for id 323,                     User Charu Saxena for benches ['B5']
+INFO 2024-06-20 19:13:23,370 functions DeallocationSchedular 268 Scheduler Completed Execution
+INFO 2024-06-20 19:13:24,423 functions DeallocationSchedular 206 Bench Deallocated for id 323,                     User Charu Saxena for benches ['B5']
+INFO 2024-06-20 19:13:24,424 functions DeallocationSchedular 268 Scheduler Completed Execution

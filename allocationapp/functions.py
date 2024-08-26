@@ -8,15 +8,15 @@ STEP 5:
 """
 from datetime import date
 from datetime import datetime
-import calendar
+import calendar,os
 from django.db.models import Q
 from .models import AllocationDetailsModel,LabModel,UserModel
-from .mail import Email,ExpiryEmail
-
+from .mail import Email,ExpiryEmail,CountConfirmation
+import aiohttp,json,asyncio,traceback
 import logging
 logger = logging.getLogger(__name__)
 schedular_logger = logging.getLogger('scheduler_logger')
-
+# processed_allocations = set()
 
 def calculate_workweek():
     """
@@ -51,7 +51,7 @@ def DeallocationSchedular():
     else:
         next_workweek = str(int(Workweek)+1) + str(year)
     try:
-        allocation_data = AllocationDetailsModel.objects.filter(status='allocated').values('id','Program','Sku','Vendor','FromWW',
+        allocation_data = AllocationDetailsModel.objects.filter(status='allocated').values('id','Program','Sku','Vendor','FromWW',"Function",'Department',
             'ToWW','Duration','AllocatedTo','NumberOfbenches','Remarks','Team','IsAllocated','IsRequested','Location__Name','BenchData','AllocatedDate','status','DeallocatedBy')
         #changes,
         summary_data_list = []
@@ -72,12 +72,16 @@ def DeallocationSchedular():
                 previous_week_int = int(week_part) - 1
                 previous_week_int = 52 if previous_week_int == 0 else previous_week_int
                 previous_workweek_1 = f"{previous_week_int:02d}{year_part}"
+                
+                # if (each_allocation['ToWW'] == "252024"):
                 if (each_allocation['ToWW'] == current_workweek) or \
                     (each_allocation['ToWW'] == previous_workweek_1) or \
                         (each_allocation['ToWW'] == previous_workweek) or \
                             (int(each_allocation['ToWW'][2:]) < int(year)) or \
                                 ((int(each_allocation['ToWW'][2:]) == int(year)) and (int(each_allocation['ToWW'][:2]) < int(current_workweek[:2]))):
-                    
+                    # if each_allocation['id'] in processed_allocations:
+                    #         continue
+                    # processed_allocations.add(each_allocation['id'])
                 #     # If allocation expiry workweek is current week
                     current_allocation = AllocationDetailsModel.objects.get(id=each_allocation['id'])
                     current_allocation.status="complete"
@@ -89,14 +93,38 @@ def DeallocationSchedular():
                     current_allocation.save()
                     benchdata = current_allocation.BenchData
                     lab_query = LabModel.objects.get(Q(Name=current_allocation.Location.Name))
-                    for each_bench_request in benchdata:
-                        for each_bench_row in lab_query.BenchDetails:
-                            for each_bench_column_no in range(len(each_bench_row['seats'])):
-                                if each_bench_row['seats'][each_bench_column_no]['labelNo'] == each_bench_request:
-                                    each_bench_row['seats'][each_bench_column_no]['IsRequested'] = False
-                                    each_bench_row['seats'][each_bench_column_no]['IsAllocated'] = False
-                                    each_bench_row['seats'][each_bench_column_no]['AllocationData'] = None
-                                    lab_query.save()
+                    for each_bench_request in current_allocation.BenchData:
+                        print("each_bench",each_bench_request)
+                        if '-' in each_bench_request:  # Check if it's in the format "Rack 7-Shelf 2"
+                                rack_label, shelf_label = each_bench_request.split('-')  # Split bench data into rack and shelf labels
+                                for each_bench_row in lab_query.BenchDetails:
+                                    for each_bench_column in each_bench_row['seats']:
+                                        if each_bench_column['labelNo'] == rack_label:
+                                            print("each_bench_column",each_bench_column)
+                                            if 'RackDetail' in each_bench_column:
+                                                for rack_detail in each_bench_column['RackDetail']:
+                                                    print("rackdetail",rack_detail)
+                                                    if rack_detail['shelfNo'] == shelf_label:
+                                                        rack_detail['IsRequested'] = False
+                                                        rack_detail['IsAllocated'] = False
+                                                        rack_detail['AllocationData'] = None
+                                                        print("updated detail",rack_detail)
+                                                all_rack_benches_allocated = all(detail['IsAllocated'] for detail in each_bench_column['RackDetail'])
+                                                all_rack_benches_requested = all(detail['IsRequested'] for detail in each_bench_column['RackDetail'])
+                                                each_bench_column['IsAllocated'] = all_rack_benches_allocated
+                                                
+                                                each_bench_column['IsRequested'] = all_rack_benches_requested
+                                            
+                                lab_query.save()    
+                        else:
+                            for each_bench_row in lab_query.BenchDetails:
+                                for each_bench_column_no in range(len(each_bench_row['seats'])):
+                                    if each_bench_row['seats'][each_bench_column_no]['labelNo'] == each_bench_request:
+                                        print("label_no",each_bench_request)
+                                        each_bench_row['seats'][each_bench_column_no]['IsRequested'] = False
+                                        each_bench_row['seats'][each_bench_column_no]['IsAllocated'] = False
+                                        each_bench_row['seats'][each_bench_column_no]['AllocationData'] = None
+                            lab_query.save()
                     try:
                         notify_persons = []
                         if  current_allocation.NotifyTo is not None:     
@@ -129,13 +157,26 @@ def DeallocationSchedular():
                                 "duration":current_allocation.Duration,
                                 "remarks":current_allocation.Remarks,
                                 "team":current_allocation.Team,
+                                "function":current_allocation.Function,
+                                'department':current_allocation.Department,
                                 "id":current_allocation.id,
                                 "numberofbenches":current_allocation.NumberOfbenches,
-                                "bench_data":current_allocation.BenchData,
                                 "message":message,
                                 "subject":subject,
                                 "deallocatedby":current_allocation.DeallocatedBy,
                             }
+                    
+                    bench_data = []
+                    rack_shelf_data = []
+                    if "BenchData" in current_allocation.__dict__ and current_allocation.BenchData:
+                        for each_bench in current_allocation.BenchData:
+                            if 'Rack' in each_bench:
+                                    rack_shelf_data.append(each_bench)
+                            else:
+                                    bench_data.append(each_bench)
+                    mail_data["bench_data"] = bench_data
+                    mail_data["Rack-Shelf"] = rack_shelf_data
+
                     TO.append(' '+str(current_allocation.AllocatedTo[0]['Email']))
                     if notify_emails:
                         Cc = notify_emails
@@ -168,6 +209,9 @@ def DeallocationSchedular():
                     User {current_allocation.AllocatedTo[0]['Name']} for benches {current_allocation.BenchData}")
                 elif each_allocation['ToWW'] == next_workweek:
                     # If allocation expiry workweek is current week
+                    # if each_allocation['id'] in processed_allocations:
+                    #     continue
+                    # processed_allocations.add(each_allocation['id'])
                     current_allocation = AllocationDetailsModel.objects.get(id=each_allocation['id'])
                     try:
                         notify_persons = []
@@ -188,25 +232,39 @@ def DeallocationSchedular():
                     message = "This email is a Remainder of your allocated Lab Benches is <b>about to Expire next week</b>"
                     subject = "Bench request is about to expire for "
                     mail_data = {
-                                "User":current_allocation.AllocatedTo[0]['Name'],
-                                "WWID":current_allocation.AllocatedTo[0]['WWID'],
-                                "program":current_allocation.Program,
-                                "sku":current_allocation.Sku,
-                                "lab_name":current_allocation.Location.Name,
-                                "vendor":current_allocation.Vendor,
-                                "allocatedto":current_allocation.AllocatedTo[0]['Name'],
-                                "notifyto":','.join(notify_persons),
-                                "fromww":str(current_allocation.FromWW),
-                                "toww":str(current_allocation.ToWW),
-                                "duration":current_allocation.Duration,
-                                "remarks":current_allocation.Remarks,
-                                "team":current_allocation.Team,
-                                "id":current_allocation.id,
-                                "numberofbenches":current_allocation.NumberOfbenches,
-                                "bench_data":current_allocation.BenchData,
-                                "message":message,
-                                "subject":subject,
-                            }
+                                    "User":current_allocation.AllocatedTo[0]['Name'],
+                                    "WWID":current_allocation.AllocatedTo[0]['WWID'],
+                                    "program":current_allocation.Program,
+                                    "sku":current_allocation.Sku,
+                                    "lab_name":current_allocation.Location.Name,
+                                    "vendor":current_allocation.Vendor,
+                                    "allocatedto":current_allocation.AllocatedTo[0]['Name'],
+                                    "notifyto":','.join(notify_persons),
+                                    "fromww":str(current_allocation.FromWW),
+                                    "toww":str(current_allocation.ToWW),
+                                    "duration":current_allocation.Duration,
+                                    "remarks":current_allocation.Remarks,
+                                    "function":current_allocation.Function,
+                                    "team":current_allocation.Team,
+                                    "id":current_allocation.id,
+                                    "numberofbenches":current_allocation.NumberOfbenches,
+                                    "message":message,
+                                    "subject":subject,
+                                    "department":current_allocation.Department,
+                                    "function":current_allocation.Function
+                                }
+                    bench_data = []
+                    rack_shelf_data = []
+                    print(f"Bench_data: {current_allocation.BenchData}. PID: {os.getpid()}")
+                    schedular_logger.info(f"Bench_data: {current_allocation.BenchData}. PID: {os.getpid()}")
+                    if "BenchData" in current_allocation.__dict__ and current_allocation.BenchData:
+                        for each_bench in current_allocation.BenchData:
+                            if 'Rack' in each_bench:
+                                rack_shelf_data.append(each_bench)
+                            else:
+                                bench_data.append(each_bench)
+                    mail_data["bench_data"] = bench_data
+                    mail_data["Rack-Shelf"] = rack_shelf_data
                     TO.append(' '+str(current_allocation.AllocatedTo[0]['Email']))
                     if notify_emails:
                         Cc = notify_emails
@@ -229,3 +287,93 @@ def DeallocationSchedular():
         print("Scheduler Completed Execution")
     except Exception as e:
         print(e)
+
+
+async def fetch_data(session, url, payload):
+    try:
+        async with session.post(url, json=payload) as response:
+            response.raise_for_status()
+            data = await response.json()
+            return data, payload['team']
+    except aiohttp.ClientError as e:
+        return {"status": "An error occurred.", "error": str(e)}, payload['team']
+    except json.JSONDecodeError as e:
+        return {"status": "Invalid JSON response.", "error": str(e)}, payload['team']
+
+async def process_payloads(payloads):
+    url = "https://labspaceapi.apps1-bg-int.icloud.intel.com/home/GetDrillDownChartData/"
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_data(session, url, payload) for payload in payloads]
+        return await asyncio.gather(*tasks)
+
+def analyze_data(data, team):
+    FROM = 'LabSpaceManager@intel.com'   
+    CC = []
+    TO = ['sakthirajanx.sembulingam@intel.com']
+    if not isinstance(data, list):
+        return {"status": f"Invalid data format for team {team}.", "data": data}
+    
+    all_data = next((item for item in data if item.get('category') == 'All'), None)
+    if not all_data:
+        return {"status": f"Category 'All' not found in API data for team {team}."}
+
+    all_value = all_data.get('value')
+    all_report = all_data.get('Report', [{}])[0]
+    allocated_data = all_report.get('Allocated', [])
+    free_report = all_report.get('Free', [])
+
+    bench_data_length = sum(len(allocation.get('BenchData', [])) for allocation in allocated_data)
+    free_report_count = sum(
+        len(label_list)
+        for free_report_entry in free_report
+        for labels_list in free_report_entry.values()
+        for labels in labels_list
+        for label_list in labels.values()
+    )
+
+    total = bench_data_length + free_report_count
+    message = f"This email is a confirmation of count for {team} matching in home page or not"
+    subject = f"Confirmation of Home Page count for {team}"
+    mail_data = {
+        "team": team,
+        "bench_data_length": bench_data_length,
+        "free_report_count": free_report_count,
+        "total": total,
+        "all_value": all_value,
+        "match": all_value == total,
+        "message": message,
+        "subject": subject,
+    }
+    # Send an email with the result
+    mail = CountConfirmation(FROM, TO, CC, mail_data)
+    mail.sendmail()
+
+    return {
+        "team": team,
+        "bench_data_length": bench_data_length,
+        "free_report_count": free_report_count,
+        "total": total,
+        "all_value": all_value,
+        "match": all_value == total
+    }
+
+
+def CheckCounntSchedular():
+    """ Method to be called by scheduler """
+    try:
+        initial_payloads = [{"team": "CCG"}, {"team": "PSE"}, {"team": "SIV"}, {"team": "CLSS"}, {"team": "C4S"}]
+        # for payload in initial_payloads:
+        #     print("payload",payload)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        results = loop.run_until_complete(process_payloads(initial_payloads))
+
+        result_data = {team: analyze_data(data, team) for data, team in results}
+
+        with open('results.json', 'w') as f:
+            json.dump(result_data, f, indent=4)
+
+        print({"status": "Data processed successfully.", "results": result_data})
+    except Exception as e:
+        print(traceback.format_exc())
+        print({"status": "An error occurred.", "error": str(e)})
